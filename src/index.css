@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+/* Tokens do design system FlashChopp (flashchopp.pen) */
+@theme {
+  --color-navy: #253646;
+  --color-navy-deep: #1D2C3A;
+  --color-navy-soft: #2E4155;
+  --color-navy-line: #3A4E62;
+  --color-navy-mute: #8D9BA8;
+  --color-gold: #D79D32;
+  --color-gold-soft: #E3B45F;
+  --color-gold-tint: #F5E9D2;
+  --color-gold-ink: #8A5F12;
+  --color-gold-ink-2: #7A5410;
+  --color-cream: #EEE6BF;
+  --color-cream-bg: #F7F3E6;
+  --color-line-cream: #E0D8BC;
+  --color-line-soft: #E8E3D3;
+  --color-text-mute: #6B7783;
+  --color-white: #FFFFFF;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: "Archivo", system-ui, sans-serif;
+    background-color: var(--color-cream-bg);
+    color: var(--color-navy);
+    line-height: normal;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .font-archivo {
+    font-family: "Archivo", system-ui, sans-serif;
+  }
+
+  .font-jb {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+  }
+}
+
+/* Slider da calculadora: trilho 2px, preenchimento dourado, knob quadrado navy */
+@layer components {
+  .fc-range {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 12px;
+    background: linear-gradient(
+        to right,
+        var(--color-gold) 0 var(--fill),
+        var(--color-line-cream) var(--fill) 100%
+      )
+      center / 100% 2px no-repeat;
+    cursor: pointer;
+  }
+
+  .fc-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    background: var(--color-navy);
+    border: none;
+  }
+
+  .fc-range::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    background: var(--color-navy);
+    border: none;
+  }
+
+  .fc-range:focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 4px;
+  }
+}
