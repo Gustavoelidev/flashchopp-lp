@@ -33,6 +33,27 @@
     -webkit-font-smoothing: antialiased;
   }
 
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background: var(--color-gold);
+    color: var(--color-navy);
+  }
+
+  a:focus-visible,
+  button:focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 3px;
+  }
+
   .font-archivo {
     font-family: "Archivo", system-ui, sans-serif;
   }
@@ -42,41 +63,8 @@
   }
 }
 
-/* Slider da calculadora: trilho 2px, preenchimento dourado, knob quadrado navy */
-@layer components {
-  .fc-range {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 100%;
-    height: 12px;
-    background: linear-gradient(
-        to right,
-        var(--color-gold) 0 var(--fill),
-        var(--color-line-cream) var(--fill) 100%
-      )
-      center / 100% 2px no-repeat;
-    cursor: pointer;
-  }
-
-  .fc-range::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 12px;
-    height: 12px;
-    border-radius: 2px;
-    background: var(--color-navy);
-    border: none;
-  }
-
-  .fc-range::-moz-range-thumb {
-    width: 12px;
-    height: 12px;
-    border-radius: 2px;
-    background: var(--color-navy);
-    border: none;
-  }
-
-  .fc-range:focus-visible {
-    outline: 2px solid var(--color-gold);
-    outline-offset: 4px;
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 }

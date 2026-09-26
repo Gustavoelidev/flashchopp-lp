@@ -1,4 +1,5 @@
 import { Icon, Section, SectionHead } from './ui'
+import { Reveal, Stagger, RevealItem } from './motion'
 
 const MODULOS = [
   ['chart', 'Dashboard'],
@@ -41,14 +42,14 @@ export function StatusDot({ status, className = 'size-[7px]' }) {
 
 export function Sistema() {
   return (
-    <Section id="funcionalidades" className="hidden bg-white py-[130px] lg:block">
+    <Section className="hidden bg-white py-[130px] lg:block">
       <div className="flex flex-col gap-16">
         <SectionHead
           label="A SOLUÇÃO"
           title="Transforme sua choperia em uma operação de delivery profissional."
           sub="Um sistema, cinco módulos que conversam entre si. Da vitrine online até o dinheiro na conta."
         />
-        <div className="flex w-full overflow-hidden rounded-[3px] border border-line-soft bg-white">
+        <Reveal y={40} className="flex w-full overflow-hidden rounded-[3px] border border-line-soft bg-white">
           <aside className="flex w-[213px] shrink-0 flex-col gap-[6px] border-r border-line-soft bg-cream-bg py-6">
             <span className="px-[22px] font-jb text-[9px] tracking-[1.3px] text-text-mute">MÓDULOS</span>
             <ul className="flex flex-col gap-[2px] pt-[10px]">
@@ -57,8 +58,8 @@ export function Sistema() {
                 return (
                   <li
                     key={label}
-                    className={`flex items-center gap-3 py-[11px] ${
-                      active ? '-ml-px border-l-2 border-gold bg-white pr-[22px] pl-[21px]' : 'px-[22px]'
+                    className={`flex items-center gap-3 py-[11px] transition-colors ${
+                      active ? '-ml-px border-l-2 border-gold bg-white pr-[22px] pl-[21px]' : 'px-[22px] hover:bg-white/60'
                     }`}
                   >
                     <Icon name={icon} stroke={1.4} className={`size-4 ${active ? 'text-navy' : 'text-text-mute'}`} />
@@ -99,10 +100,11 @@ export function Sistema() {
                 </span>
               ))}
             </div>
+            <Stagger stagger={0.09} delay={0.3}>
             {PEDIDOS.map(([id, cliente, bairro, itens, valor, pg, status], i) => (
-              <div
+              <RevealItem
                 key={id}
-                className={`flex min-w-[976px] items-center px-7 py-[17px] text-[13.5px] ${i === 0 ? 'bg-gold-tint' : 'border-t border-line-soft'}`}
+                className={`flex min-w-[976px] items-center px-7 py-[17px] text-[13.5px] transition-colors ${i === 0 ? 'bg-gold-tint' : 'border-t border-line-soft hover:bg-cream-bg'}`}
               >
                 <span className={`${COLS[0]} shrink-0 font-jb text-[11.5px] text-text-mute`}>{id}</span>
                 <span className={`${COLS[1]} shrink-0 font-medium text-navy`}>{cliente}</span>
@@ -114,10 +116,11 @@ export function Sistema() {
                   <StatusDot status={status} />
                   <span className={`text-[13px] font-medium ${status === 'Entregue' ? 'text-text-mute' : 'text-navy'}`}>{status}</span>
                 </span>
-              </div>
+              </RevealItem>
             ))}
+            </Stagger>
           </div>
-        </div>
+        </Reveal>
       </div>
     </Section>
   )

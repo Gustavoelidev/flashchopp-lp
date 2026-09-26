@@ -1,3 +1,5 @@
+import { Reveal, Stagger, RevealItem, Grow } from './motion'
+
 const ICONS = {
   arrow: 'M4.5 12h15m-6.3-6.5l6.5 6.5-6.5 6.5',
   check: 'M4.8 12.4l4.8 4.6 9.6-10',
@@ -36,7 +38,7 @@ export function Icon({ name, className = '', stroke = 1.5 }) {
 export function SectionLabel({ children, center = false }) {
   return (
     <div className="flex items-center gap-3 lg:gap-[14px]">
-      <span className="h-px w-6 bg-gold lg:w-8" />
+      <Grow className="h-px w-6 bg-gold lg:w-8" />
       <span className="font-jb text-[9.5px] font-medium tracking-[1.5px] text-gold lg:text-[10.5px] lg:tracking-[1.6px]">
         {children}
       </span>
@@ -45,7 +47,7 @@ export function SectionLabel({ children, center = false }) {
   )
 }
 
-/* Número + rule + label (ex.: "01 — LOJA ONLINE") */
+/* Número + rule + label (ex.: "01 LOJA ONLINE") */
 export function FeatureLabel({ n, children, dark = false }) {
   return (
     <div className="flex items-center gap-3 lg:gap-[14px]">
@@ -67,18 +69,18 @@ export function Rule({ className = 'bg-line-cream' }) {
 /* Citação com barra dourada à esquerda */
 export function Quote({ children }) {
   return (
-    <div className="flex w-full gap-4 lg:gap-[18px]">
-      <span className="h-[46px] w-[2px] shrink-0 bg-gold lg:h-12" />
+    <Reveal className="flex w-full gap-4 lg:gap-[18px]" x={-16} y={0}>
+      <Grow axis="y" delay={0.2} className="h-[46px] w-[2px] shrink-0 bg-gold lg:h-12" style={{ originY: 0 }} />
       <p className="flex-1 text-[16px] leading-[24px] font-medium text-navy lg:text-[17px] lg:leading-[26px]">
         {children}
       </p>
-    </div>
+    </Reveal>
   )
 }
 
 export function Section({ id, className = '', children }) {
   return (
-    <section id={id} className={`w-full scroll-mt-4 ${className}`}>
+    <section id={id} className={`w-full scroll-mt-16 ${className}`}>
       <div className="mx-auto w-full max-w-[1440px] px-5 md:px-10 xl:px-24">{children}</div>
     </section>
   )
@@ -87,23 +89,39 @@ export function Section({ id, className = '', children }) {
 /* Título + subtítulo lado a lado (Sistema, Dashboard, E mais, Para quem é) */
 export function SectionHead({ label, title, sub }) {
   return (
-    <div className="flex w-full flex-col gap-[26px] lg:flex-row lg:items-end lg:justify-between lg:gap-24">
+    <Stagger className="flex w-full flex-col gap-[26px] lg:flex-row lg:items-end lg:justify-between lg:gap-24" stagger={0.12}>
       <div className="flex max-w-[700px] flex-col gap-[26px]">
-        <SectionLabel>{label}</SectionLabel>
-        <h2 className="text-[34px] leading-[38px] font-semibold tracking-[-1.4px] text-navy lg:text-[46px] lg:leading-[51px] lg:tracking-[-1.9px]">
+        <RevealItem>
+          <SectionLabel>{label}</SectionLabel>
+        </RevealItem>
+        <RevealItem
+          as="h2"
+          className="text-[34px] leading-[38px] font-semibold tracking-[-1.4px] text-navy lg:text-[46px] lg:leading-[51px] lg:tracking-[-1.9px]"
+        >
           {title}
-        </h2>
+        </RevealItem>
       </div>
       {sub && (
-        <p className="text-[15.5px] leading-[26px] text-text-mute lg:w-[340px] lg:shrink-0 lg:text-[16px] lg:leading-[27px]">
+        <RevealItem
+          as="p"
+          className="text-[15.5px] leading-[26px] text-text-mute lg:w-[340px] lg:shrink-0 lg:text-[16px] lg:leading-[27px]"
+        >
           {sub}
-        </p>
+        </RevealItem>
       )}
-    </div>
+    </Stagger>
   )
 }
 
-export const CTA_HREF = '#planos'
+/* WhatsApp comercial: todo botão de compra ou contato abre a conversa com uma mensagem pronta */
+export const WHATSAPP = '5548996500843'
+export const waLink = (msg) => `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`
+export const WA = {
+  comecar: waLink('Olá! Quero começar a usar o FlashChopp na minha choperia.'),
+  especialista: waLink('Olá! Quero falar com um especialista sobre o FlashChopp.'),
+  plano: (nome) => waLink(`Olá! Tenho interesse no plano ${nome} do FlashChopp.`),
+}
+export const EXTERNAL = { target: '_blank', rel: 'noopener noreferrer' }
 
 /* Texto que muda entre o layout mobile (m) e desktop (d), como no design */
 export function Resp({ m, d }) {

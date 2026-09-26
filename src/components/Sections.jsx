@@ -1,12 +1,14 @@
-import { Icon, Section, SectionHead, SectionLabel, Resp, CTA_HREF } from './ui'
+import { Icon, Section, SectionHead, SectionLabel, Resp, WA, EXTERNAL } from './ui'
+import { CountUp, Grow, Reveal, RevealItem, Stagger } from './motion'
+import { LetreiroFinal } from './Infinite'
 
 /* ---------- Dashboard ---------- */
 
 const KPIS = [
-  ['RECEITA HOJE', 'R$ 4.280', '+24% vs ontem', true],
-  ['PEDIDOS HOJE', '38', '+12% vs ontem'],
-  ['TICKET MÉDIO', 'R$ 412', '−3% vs ontem'],
-  ['META DIÁRIA', '71%', null],
+  ['RECEITA HOJE', { to: 4280, prefix: 'R$ ' }, '+24% vs ontem', true],
+  ['PEDIDOS HOJE', { to: 38 }, '+12% vs ontem'],
+  ['TICKET MÉDIO', { to: 412, prefix: 'R$ ' }, '−3% vs ontem'],
+  ['META DIÁRIA', { to: 71, suffix: '%' }, null],
 ]
 
 const BARRAS = [67, 93, 58, 102, 80, 125, 147, 88, 112, 77, 131, 106, 141, 160]
@@ -28,12 +30,12 @@ function Kpi({ label, value, delta, gold, meta }) {
           gold ? 'text-gold' : 'text-navy'
         }`}
       >
-        {value}
+        <CountUp {...value} />
       </span>
       {meta ? (
         <>
           <span className="hidden h-[2px] w-full bg-line-cream lg:block">
-            <span className="block h-full w-[71%] bg-gold" />
+            <Grow delay={0.3} className="block h-full w-[71%] bg-gold" />
           </span>
           <span className="text-[11px] text-text-mute lg:text-[12px]">
             <Resp m="de R$ 6.000" d="R$ 4.280 de R$ 6.000" />
@@ -55,7 +57,7 @@ export function Dashboard() {
           title="Tenha sua operação na palma da mão."
           sub="Saiba o que está acontecendo na sua operação sem precisar abrir uma planilha."
         />
-        <div className="w-full overflow-hidden rounded-[3px] border border-line-soft bg-white">
+        <Reveal y={40} className="w-full overflow-hidden rounded-[3px] border border-line-soft bg-white">
           <div className="flex items-center justify-between border-b border-line-soft bg-cream-bg px-[18px] py-4 lg:px-7 lg:py-[22px]">
             <div className="flex flex-col gap-1 lg:gap-[5px]">
               <span className="text-[16px] font-semibold tracking-[-0.4px] text-navy lg:text-[19px] lg:tracking-[-0.5px]">Bom dia, Gustavo</span>
@@ -97,9 +99,11 @@ export function Dashboard() {
               <div className="flex flex-col gap-[10px]">
                 <div className="flex h-[110px] items-end gap-[5px] lg:h-[170px] lg:gap-[9px]">
                   {BARRAS.map((h, i) => (
-                    <span
+                    <Grow
                       key={i}
-                      className={`flex-1 ${i >= 11 ? 'bg-gold' : 'bg-cream'}`}
+                      axis="y"
+                      delay={0.2 + i * 0.05}
+                      className={`flex-1 transition-colors hover:bg-gold-soft ${i >= 11 ? 'bg-gold' : 'bg-cream'}`}
                       style={{ height: `${(h / 170) * 100}%` }}
                     />
                   ))}
@@ -132,14 +136,18 @@ export function Dashboard() {
                       <span className="font-jb text-[11px] text-text-mute lg:text-[11.5px]">{valor}</span>
                     </div>
                     <span className="block h-[2px] w-full bg-line-soft">
-                      <span className={`block h-full ${i === 0 ? 'bg-gold' : 'bg-cream'}`} style={{ width: `${pct}%` }} />
+                      <Grow
+                        delay={0.3 + i * 0.1}
+                        className={`block h-full ${i === 0 ? 'bg-gold' : 'bg-cream'}`}
+                        style={{ width: `${pct}%` }}
+                      />
                     </span>
                   </div>
                 ))}
               </div>
             </div>
           </div>
-        </div>
+        </Reveal>
       </div>
     </Section>
   )
@@ -158,31 +166,35 @@ const RECURSOS = [
 
 export function MaisRecursos() {
   return (
-    <Section className="bg-cream-bg py-[72px] lg:py-[130px]">
+    <Section id="recursos" className="bg-cream-bg py-[72px] lg:py-[130px]">
       <div className="flex flex-col gap-[30px] lg:gap-16">
         <SectionHead
           label="E MAIS"
           title="Um sistema inteiro por trás da sua loja."
-          sub={<span className="hidden lg:inline">Cada módulo resolve uma parte da operação — e todos funcionam conectados.</span>}
+          sub={<span className="hidden lg:inline">Cada módulo resolve uma parte da operação, e todos funcionam conectados.</span>}
         />
-        <div className="grid grid-cols-1 lg:grid-cols-3">
+        <Stagger className="grid grid-cols-1 lg:grid-cols-3" stagger={0.09}>
           {RECURSOS.map(([icon, titulo, curto, longo], i) => (
-            <div
+            <RevealItem
               key={titulo}
-              className={`flex gap-4 border-line-cream py-[22px] lg:flex-col lg:gap-[18px] lg:py-10 ${
+              className={`group flex gap-4 border-line-cream py-[22px] lg:flex-col lg:gap-[18px] lg:py-10 ${
                 i < RECURSOS.length - 1 ? 'border-b' : ''
               } ${i >= 3 ? 'lg:border-b-0' : ''} ${i % 3 === 0 ? 'lg:pr-12' : 'lg:border-l lg:px-12'}`}
             >
-              <Icon name={icon} stroke={1.3} className="size-[22px] text-gold lg:size-[26px]" />
+              <Icon
+                name={icon}
+                stroke={1.3}
+                className="size-[22px] text-gold lg:size-[26px]"
+              />
               <div className="flex flex-1 flex-col gap-[7px] lg:gap-[18px]">
                 <h3 className="text-[19px] font-semibold tracking-[-0.5px] text-navy lg:text-[23px] lg:tracking-[-0.7px]">{titulo}</h3>
                 <p className="text-[14px] leading-[22px] text-text-mute lg:text-[15px] lg:leading-[25px]">
                   <Resp m={curto} d={longo} />
                 </p>
               </div>
-            </div>
+            </RevealItem>
           ))}
-        </div>
+        </Stagger>
       </div>
     </Section>
   )
@@ -217,21 +229,25 @@ export function ParaQuem() {
           title="Feito para quem vive de chopp."
           sub={
             <span className="hidden lg:inline">
-              Se o chopp sai da sua torneira ou do seu barril, o FlashChopp foi desenhado para a sua rotina.
+              Para choperias que entregam, distribuidoras de barril e operações que querem sair da planilha.
             </span>
           }
         />
-        <div className="grid grid-cols-1 border-t border-line-soft lg:grid-cols-3">
+        <Stagger className="grid grid-cols-1 border-t border-line-soft lg:grid-cols-3" stagger={0.12}>
           {PUBLICOS.map(([n, icon, titulo, desc, itens], i) => (
-            <div
+            <RevealItem
               key={titulo}
-              className={`flex flex-col gap-4 border-line-soft py-[26px] lg:gap-5 lg:pt-11 lg:pb-0 ${
+              className={`group flex flex-col gap-4 border-line-soft py-[26px] lg:gap-5 lg:pt-11 lg:pb-0 ${
                 i < 2 ? 'border-b lg:border-b-0' : ''
               } ${i === 0 ? 'lg:pr-14' : 'lg:border-l lg:px-14'}`}
             >
               <div className="flex items-center justify-between">
                 <span className="font-jb text-[11px] tracking-[0.6px] text-gold lg:text-[12px]">{n}</span>
-                <Icon name={icon} stroke={1.3} className="size-[22px] text-navy lg:size-[26px]" />
+                <Icon
+                  name={icon}
+                  stroke={1.3}
+                  className="size-[22px] text-navy lg:size-[26px]"
+                />
               </div>
               <h3 className="text-[23px] leading-[26px] font-semibold tracking-[-0.7px] text-navy lg:text-[27px] lg:leading-[31px] lg:tracking-[-0.9px]">
                 {titulo}
@@ -240,16 +256,16 @@ export function ParaQuem() {
               <ul className="flex flex-col gap-[9px] lg:gap-0 lg:pt-2">
                 {itens.map(([curto, longo]) => (
                   <li key={curto} className="flex items-center gap-3 lg:gap-[14px] lg:border-t lg:border-line-soft lg:py-[14px]">
-                    <span className="font-jb text-[10.5px] text-gold lg:text-[11px]">—</span>
+                    <span className="size-[5px] shrink-0 rotate-45 bg-gold" />
                     <span className="text-[14px] text-navy lg:text-[14.5px]">
                       <Resp m={curto} d={longo ?? curto} />
                     </span>
                   </li>
                 ))}
               </ul>
-            </div>
+            </RevealItem>
           ))}
-        </div>
+        </Stagger>
       </div>
     </Section>
   )
@@ -298,13 +314,14 @@ function Plano({ nome, desc, cta, itens, destaque }) {
         <span className="text-[12px] leading-[18px] text-navy-mute lg:text-[12.5px] lg:leading-[19px]">Plano definido junto com a sua operação</span>
       </div>
       <a
-        href="#contato"
-        className={`flex items-center justify-center gap-[9px] rounded-[2px] p-[14px] transition-colors lg:gap-[10px] lg:p-[15px] ${
+        href={WA.plano(nome)}
+        {...EXTERNAL}
+        className={`group flex items-center justify-center gap-[9px] rounded-[2px] p-[14px] transition-colors lg:gap-[10px] lg:p-[15px] ${
           destaque ? 'bg-gold text-navy hover:bg-gold-soft' : 'border border-navy-line text-cream hover:border-navy-mute'
         }`}
       >
         <span className="text-[14px] font-semibold lg:text-[14.5px]">{cta}</span>
-        <Icon name="arrow" className="size-[15px]" />
+        <Icon name="arrow" className="size-[15px] transition-transform group-hover:translate-x-1" />
       </a>
       <span className="h-px bg-navy-line" />
       <ul className="flex flex-col gap-3 lg:gap-[13px]">
@@ -323,22 +340,32 @@ export function Planos() {
   return (
     <Section id="planos" className="bg-navy py-[72px] lg:py-[130px]">
       <div className="flex flex-col items-center gap-[26px] lg:gap-16">
-        <div className="flex max-w-[760px] flex-col items-center gap-[26px] text-center lg:gap-6">
-          <SectionLabel center>PLANOS</SectionLabel>
-          <h2 className="text-[34px] leading-[37px] font-semibold tracking-[-1.4px] text-cream lg:text-[50px] lg:leading-[54px] lg:tracking-[-2.1px]">
+        <Stagger className="flex max-w-[760px] flex-col items-center gap-[26px] text-center lg:gap-6" stagger={0.12}>
+          <RevealItem>
+            <SectionLabel center>PLANOS</SectionLabel>
+          </RevealItem>
+          <RevealItem
+            as="h2"
+            className="text-[34px] leading-[37px] font-semibold tracking-[-1.4px] text-cream lg:text-[50px] lg:leading-[54px] lg:tracking-[-2.1px]"
+          >
             Comece a profissionalizar sua operação.
-          </h2>
-          <p className="max-w-[600px] text-[15px] leading-[26px] text-navy-mute lg:text-[17px] lg:leading-[29px]">
+          </RevealItem>
+          <RevealItem as="p" className="max-w-[600px] text-[15px] leading-[26px] text-navy-mute lg:text-[17px] lg:leading-[29px]">
             Tenha sua loja online e as ferramentas para organizar sua operação em um único sistema.
-          </p>
-        </div>
-        <div className="flex w-full flex-col lg:flex-row lg:border lg:border-navy-line">
+          </RevealItem>
+        </Stagger>
+        <Stagger className="flex w-full flex-col lg:flex-row lg:border lg:border-navy-line" stagger={0.12}>
           {PLANOS.map((p, i) => (
-            <div key={p.nome} className={`flex flex-1 ${i > 0 ? 'lg:border-l lg:border-navy-line' : ''} ${p.destaque ? 'lg:-mt-px' : ''}`}>
+            <RevealItem
+              key={p.nome}
+              className={`flex flex-1 ${i > 0 ? 'lg:border-l lg:border-navy-line' : ''} ${
+                p.destaque ? 'lg:-mt-px' : ''
+              }`}
+            >
               <Plano {...p} />
-            </div>
+            </RevealItem>
           ))}
-        </div>
+        </Stagger>
       </div>
     </Section>
   )
@@ -348,30 +375,32 @@ export function Planos() {
 
 export function CtaFinal() {
   return (
-    <section id="contato" className="w-full bg-gold">
+    <section id="contato" className="w-full overflow-hidden bg-gold">
+      <LetreiroFinal />
       <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-[26px] px-5 py-16 md:px-10 lg:flex-row lg:items-center lg:justify-between lg:gap-24 lg:py-[100px] xl:px-24">
-        <div className="flex flex-col gap-[26px] lg:max-w-[640px] lg:gap-5">
+        <Reveal className="flex flex-col gap-[26px] lg:max-w-[640px] lg:gap-5">
           <h2 className="text-[34px] leading-[37px] font-semibold tracking-[-1.4px] text-navy lg:text-[46px] lg:leading-[50px] lg:tracking-[-1.9px]">
             Pronto para organizar o delivery da sua choperia?
           </h2>
           <p className="text-[15.5px] leading-[26px] text-gold-ink-2 lg:max-w-[500px] lg:text-[17px] lg:leading-[29px]">
             Configure sua loja, cadastre seus barris e comece a receber pedidos organizados hoje mesmo.
           </p>
-        </div>
-        <div className="flex flex-col gap-[26px] lg:items-end lg:gap-[18px]">
+        </Reveal>
+        <Reveal delay={0.15} className="flex flex-col gap-[26px] lg:items-end lg:gap-[18px]">
           <a
-            href={CTA_HREF}
-            className="flex items-center justify-center gap-[11px] rounded-[2px] bg-navy p-[17px] text-cream transition-colors hover:bg-navy-deep lg:gap-3 lg:px-8 lg:py-[18px]"
+            href={WA.comecar}
+            {...EXTERNAL}
+            className="group flex items-center justify-center gap-[11px] rounded-[2px] bg-navy p-[17px] text-cream transition-[background-color,transform,box-shadow] hover:bg-navy-deep lg:gap-3 lg:px-8 lg:py-[18px]"
           >
             <span className="text-[15.5px] font-semibold lg:text-[16.5px]">Começar agora</span>
-            <Icon name="arrow" stroke={1.8} className="size-4 lg:size-[17px]" />
+            <Icon name="arrow" stroke={1.8} className="size-4 transition-transform group-hover:translate-x-1 lg:size-[17px]" />
           </a>
-          <a href={CTA_HREF} className="group flex items-center justify-center gap-[10px] text-navy">
+          <a href={WA.especialista} {...EXTERNAL} className="group flex items-center justify-center gap-[10px] text-navy">
             <span className="text-[14.5px] font-medium lg:text-[15px]">Falar com um especialista</span>
             <Icon name="arrow" className="size-[14px] transition-transform group-hover:translate-x-1 lg:size-[15px]" />
           </a>
           <span className="hidden text-[13px] text-gold-ink-2 lg:block">Sem taxa por pedido · suporte humano</span>
-        </div>
+        </Reveal>
       </div>
     </section>
   )
@@ -380,16 +409,16 @@ export function CtaFinal() {
 /* ---------- Footer ---------- */
 
 const LINKS = [
-  ['PRODUTO', [['Loja online', 'Loja online'], ['Pedidos'], ['Agendamento'], ['Calculadora', 'Calculadora de chopp']]],
-  ['GESTÃO', [['Dashboard'], ['Estoque'], ['CRM'], ['Financeiro']]],
-  ['EMPRESA', [['Sobre a GamaCloud'], ['Contato'], ['Termos de uso'], ['Privacidade']]],
+  ['PRODUTO', [['Loja online', '#loja-online'], ['Pedidos', '#pedidos'], ['Agendamento', '#agendamento'], ['Calculadora', '#calculadora', 'Calculadora de chopp']]],
+  ['GESTÃO', [['Dashboard', '#dashboard'], ['Estoque', '#recursos'], ['CRM', '#recursos'], ['Financeiro', '#recursos']]],
+  ['SUPORTE', [['Falar com a gente', WA.especialista], ['Planos', '#planos'], ['Dúvidas frequentes', '#duvidas']]],
 ]
 
 export function Footer() {
   return (
     <footer className="w-full bg-navy">
       <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-9 px-5 pt-[52px] pb-7 md:px-10 lg:gap-14 lg:pt-[72px] lg:pb-8 xl:px-24">
-        <div className="flex flex-col gap-9 lg:flex-row lg:gap-24">
+        <Reveal className="flex flex-col gap-9 lg:flex-row lg:gap-24">
           <div className="flex flex-col gap-9 lg:w-[340px] lg:shrink-0 lg:gap-[22px]">
             <img src="/flashchopp-logo.png" alt="FlashChopp" className="h-[51px] w-[110px] object-contain lg:h-[61px] lg:w-[132px]" />
             <p className="text-[14px] leading-[24px] text-navy-mute lg:text-[14.5px] lg:leading-[25px]">
@@ -400,17 +429,17 @@ export function Footer() {
             {LINKS.map(([titulo, links], i) => (
               <div key={titulo} className={`flex flex-1 flex-col gap-[14px] lg:gap-4 ${i === 2 ? 'hidden lg:flex' : ''}`}>
                 <span className="font-jb text-[9px] tracking-[1.2px] text-gold lg:text-[9.5px] lg:tracking-[1.3px]">{titulo}</span>
-                {links.map(([curto, longo]) => (
-                  <span key={curto} className="text-[13.5px] text-navy-mute lg:text-[14px]">
+                {links.map(([curto, href, longo]) => (
+                  <a key={curto} href={href} {...(href.startsWith('http') ? EXTERNAL : {})} className="w-fit text-[13.5px] text-navy-mute transition-colors hover:text-cream lg:text-[14px]">
                     <Resp m={curto} d={longo ?? curto} />
-                  </span>
+                  </a>
                 ))}
               </div>
             ))}
           </div>
-        </div>
+        </Reveal>
         <div className="flex flex-col gap-9 border-t border-navy-line pt-9 lg:flex-row lg:items-center lg:justify-between lg:gap-0 lg:pt-14">
-          <span className="text-[12px] leading-[19px] text-navy-mute lg:text-[12.5px]">© 2026 FlashChopp — um produto GamaCloud.</span>
+          <span className="text-[12px] leading-[19px] text-navy-mute lg:text-[12.5px]">© 2026 FlashChopp · um produto GamaCloud.</span>
           <span className="hidden font-jb text-[10.5px] tracking-[0.6px] text-navy-mute lg:inline">Pagamentos via PIX e Asaas</span>
         </div>
       </div>
