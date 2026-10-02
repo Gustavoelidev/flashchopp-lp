@@ -1,152 +1,81 @@
 import { Icon, Section, SectionHead, SectionLabel, Resp, WA, EXTERNAL } from './ui'
-import { CountUp, Grow, Reveal, RevealItem, Stagger } from './motion'
+import { useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { EASE, Reveal, RevealItem, Stagger } from './motion'
+import { BrowserFrame, PainelLegenda, PainelShot } from './Painel'
 import { LetreiroFinal } from './Infinite'
 
 /* ---------- Dashboard ---------- */
 
-const KPIS = [
-  ['RECEITA HOJE', { to: 4280, prefix: 'R$ ' }, '+24% vs ontem', true],
-  ['PEDIDOS HOJE', { to: 38 }, '+12% vs ontem'],
-  ['TICKET MÉDIO', { to: 412, prefix: 'R$ ' }, '−3% vs ontem'],
-  ['META DIÁRIA', { to: 71, suffix: '%' }, null],
+const TELAS_PAINEL = [
+  ['06-financeiro', 'Financeiro', 'faturamento, lucro líquido, composição dos custos e produtos mais vendidos'],
+  ['05-clientes', 'Clientes', 'histórico de cada cliente, total gasto, frequência e último pedido'],
+  ['04-produtos', 'Produtos', 'barris, acessórios e estoque com ajuste rápido de quantidade'],
+  ['09-configuracoes', 'Configurações', 'dados da loja, horário de funcionamento, feriados e pagamentos'],
 ]
-
-const BARRAS = [67, 93, 58, 102, 80, 125, 147, 88, 112, 77, 131, 106, 141, 160]
-
-const BAIRROS = [
-  ['Vila Mariana', 'R$ 12.480', 91],
-  ['Moema', 'R$ 10.120', 74],
-  ['Pinheiros', 'R$ 7.940', 59],
-  ['Itaim Bibi', 'R$ 5.360', 40],
-  ['Vila Olímpia', 'R$ 3.610', 27],
-]
-
-function Kpi({ label, value, delta, gold, meta }) {
-  return (
-    <div className="flex flex-1 flex-col gap-2 px-[18px] py-5 lg:gap-3 lg:px-[30px] lg:py-7">
-      <span className="font-jb text-[8.5px] tracking-[1.1px] text-text-mute lg:text-[9px] lg:tracking-[1.2px]">{label}</span>
-      <span
-        className={`text-[27px] leading-[27px] font-semibold tracking-[-1.2px] lg:text-[38px] lg:leading-[38px] lg:tracking-[-1.7px] ${
-          gold ? 'text-gold' : 'text-navy'
-        }`}
-      >
-        <CountUp {...value} />
-      </span>
-      {meta ? (
-        <>
-          <span className="hidden h-[2px] w-full bg-line-cream lg:block">
-            <Grow delay={0.3} className="block h-full w-[71%] bg-gold" />
-          </span>
-          <span className="text-[11px] text-text-mute lg:text-[12px]">
-            <Resp m="de R$ 6.000" d="R$ 4.280 de R$ 6.000" />
-          </span>
-        </>
-      ) : (
-        <span className="text-[11px] text-text-mute lg:text-[12px]">{delta}</span>
-      )}
-    </div>
-  )
-}
 
 export function Dashboard() {
+  const [ativa, setAtiva] = useState(0)
+  const [name, label, desc] = TELAS_PAINEL[ativa]
+
+  // Na primeira interação com as abas, baixa as outras telas para a troca não piscar
+  const [preload, setPreload] = useState(false)
+
   return (
     <Section id="dashboard" className="bg-white py-[72px] lg:py-[130px]">
-      <div className="flex flex-col gap-[30px] lg:gap-16">
+      <div className="flex flex-col gap-[30px] lg:gap-12">
         <SectionHead
           label="DASHBOARD"
           title="Tenha sua operação na palma da mão."
           sub="Saiba o que está acontecendo na sua operação sem precisar abrir uma planilha."
         />
-        <Reveal y={40} className="w-full overflow-hidden rounded-[3px] border border-line-soft bg-white">
-          <div className="flex items-center justify-between border-b border-line-soft bg-cream-bg px-[18px] py-4 lg:px-7 lg:py-[22px]">
-            <div className="flex flex-col gap-1 lg:gap-[5px]">
-              <span className="text-[16px] font-semibold tracking-[-0.4px] text-navy lg:text-[19px] lg:tracking-[-0.5px]">Bom dia, Gustavo</span>
-              <span className="text-[11.5px] text-text-mute lg:text-[12.5px]">
-                <Resp m="Quinta, 25 de setembro" d="Quinta-feira, 25 de setembro · Chopp do Gama" />
-              </span>
-            </div>
-            <div className="flex items-center gap-6 text-[12px] lg:text-[12.5px]">
-              <span className="font-semibold text-navy">Hoje</span>
-              <span className="hidden text-text-mute lg:inline">7 dias</span>
-              <span className="hidden text-text-mute lg:inline">30 dias</span>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 border-b border-line-soft lg:flex">
-            {KPIS.map(([l, v, d, gold], i) => (
-              <div
-                key={l}
-                className={`flex border-line-soft ${i % 2 === 0 ? 'border-r' : ''} ${i < 2 ? 'border-b lg:border-b-0' : ''} ${
-                  i === 1 ? 'lg:border-r' : ''
-                } ${i === 3 ? 'lg:border-r-0' : ''} lg:flex-1`}
+        <Reveal y={40} className="flex flex-col gap-5 lg:gap-6">
+          <div
+            role="tablist"
+            aria-label="Telas do painel"
+            className="-mx-5 flex gap-1 overflow-x-auto px-5 [scrollbar-width:none] md:mx-0 md:px-0"
+          >
+            {TELAS_PAINEL.map(([n, l], i) => (
+              <button
+                key={n}
+                type="button"
+                role="tab"
+                aria-selected={i === ativa}
+                onClick={() => setAtiva(i)}
+                onPointerEnter={() => setPreload(true)}
+                onFocus={() => setPreload(true)}
+                className={`shrink-0 cursor-pointer rounded-[3px] px-4 py-[9px] text-[13px] transition-colors lg:px-5 lg:text-[14px] ${
+                  i === ativa ? 'bg-navy font-semibold text-white' : 'text-text-mute hover:bg-cream-bg hover:text-navy'
+                }`}
               >
-                <Kpi label={l} value={v} delta={d} gold={gold} meta={i === 3} />
-              </div>
+                {l}
+              </button>
             ))}
           </div>
-
-          <div className="flex flex-col lg:flex-row">
-            <div className="flex flex-1 flex-col gap-4 border-b border-line-soft px-[18px] py-5 lg:gap-[22px] lg:border-r lg:border-b-0 lg:px-[30px] lg:py-7">
-              <div className="flex items-end justify-between">
-                <div className="flex flex-col gap-[5px]">
-                  <span className="text-[13px] font-semibold text-navy lg:text-[14px]">Evolução de vendas</span>
-                  <span className="hidden text-[12px] text-text-mute lg:block">Últimos 14 dias</span>
-                </div>
-                <span className="font-jb text-[10px] text-text-mute lg:text-[11px]">
-                  <Resp m="14 dias" d="R$ 48.260 no período" />
-                </span>
-              </div>
-              <div className="flex flex-col gap-[10px]">
-                <div className="flex h-[110px] items-end gap-[5px] lg:h-[170px] lg:gap-[9px]">
-                  {BARRAS.map((h, i) => (
-                    <Grow
-                      key={i}
-                      axis="y"
-                      delay={0.2 + i * 0.05}
-                      className={`flex-1 transition-colors hover:bg-gold-soft ${i >= 11 ? 'bg-gold' : 'bg-cream'}`}
-                      style={{ height: `${(h / 170) * 100}%` }}
-                    />
-                  ))}
-                </div>
-                <div className="hidden gap-[9px] lg:flex">
-                  {BARRAS.map((_, i) => (
-                    <span key={i} className="flex-1 text-center font-jb text-[9.5px] text-text-mute">
-                      {12 + i}
-                    </span>
-                  ))}
-                </div>
-              </div>
+          <BrowserFrame>
+            <div className="relative aspect-[16/10]">
+              <AnimatePresence initial={false}>
+                <motion.div
+                  key={name}
+                  className="absolute inset-0"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.35, ease: EASE }}
+                >
+                  <PainelShot name={name} alt={`Painel FlashChopp, tela ${label}: ${desc}`} />
+                </motion.div>
+              </AnimatePresence>
             </div>
-
-            <div className="flex flex-col gap-[14px] px-[18px] py-5 lg:w-[360px] lg:shrink-0 lg:gap-5 lg:px-[30px] lg:py-7">
-              <div className="flex items-end justify-between">
-                <span className="text-[13px] font-semibold text-navy lg:text-[14px]">Top bairros</span>
-                <span className="hidden font-jb text-[10.5px] text-text-mute lg:inline">30 dias</span>
-              </div>
-              <div className="flex flex-col gap-[14px] lg:gap-0">
-                {BAIRROS.map(([nome, valor, pct], i) => (
-                  <div
-                    key={nome}
-                    className={`flex-col gap-[7px] lg:gap-[9px] lg:py-[13px] ${i > 0 ? 'lg:border-t lg:border-line-soft' : ''} ${
-                      i > 2 ? 'hidden lg:flex' : 'flex'
-                    }`}
-                  >
-                    <div className="flex items-center gap-[10px]">
-                      <span className="flex-1 text-[13px] font-medium text-navy lg:text-[13.5px]">{nome}</span>
-                      <span className="font-jb text-[11px] text-text-mute lg:text-[11.5px]">{valor}</span>
-                    </div>
-                    <span className="block h-[2px] w-full bg-line-soft">
-                      <Grow
-                        delay={0.3 + i * 0.1}
-                        className={`block h-full ${i === 0 ? 'bg-gold' : 'bg-cream'}`}
-                        style={{ width: `${pct}%` }}
-                      />
-                    </span>
-                  </div>
-                ))}
-              </div>
+          </BrowserFrame>
+          {preload && (
+            <div hidden aria-hidden="true">
+              {TELAS_PAINEL.map(([n]) => (
+                <PainelShot key={n} name={n} alt="" eager />
+              ))}
             </div>
-          </div>
+          )}
+          <PainelLegenda titulo={label}>{desc}</PainelLegenda>
         </Reveal>
       </div>
     </Section>

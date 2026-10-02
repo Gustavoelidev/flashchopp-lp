@@ -160,14 +160,14 @@ export function AppWall() {
 
 export function LetreiroFinal() {
   return (
-    <div className="border-b border-navy/15 py-6 lg:py-9" aria-hidden="true">
+    <div className="border-b border-navy/15 py-4 lg:py-6" aria-hidden="true">
       <VelocityMarquee baseVelocity={-0.9}>
         {[0, 1, 2].map((i) => (
           <span key={i} className="flex items-center">
-            <span className="text-[52px] leading-none font-semibold tracking-[-2px] text-navy uppercase lg:text-[112px] lg:tracking-[-4.5px]">
+            <span className="text-[30px] leading-none font-semibold tracking-[-1px] text-navy uppercase lg:text-[60px] lg:tracking-[-2.4px]">
               Bora de chopp hoje?
             </span>
-            <span className="mx-8 size-3 shrink-0 rotate-45 bg-navy/80 lg:mx-14 lg:size-5" />
+            <span className="mx-6 size-2 shrink-0 rotate-45 bg-navy/80 lg:mx-10 lg:size-3" />
           </span>
         ))}
       </VelocityMarquee>
