@@ -104,8 +104,8 @@ export function Pedidos() {
             <div className="mx-auto w-full max-w-[640px] overflow-hidden rounded-[8px] border border-line-soft shadow-[0_30px_80px_-40px_rgba(29,44,58,0.35)]">
               <PainelShot
                 name="10-pedido-balcao"
-                w={1276}
-                h={1152}
+                w={1280}
+                h={1240}
                 sizes="(min-width: 1024px) 640px, 100vw"
                 alt="Painel FlashChopp, novo pedido de balcão: lista de produtos com estoque, quantidades, total de R$ 708,00 e pagamento via Pix"
               />
@@ -171,7 +171,7 @@ export function Agendamento() {
             <PainelShot
               name="08-agenda-dia"
               w={1920}
-              h={773}
+              h={720}
               alt="Painel FlashChopp, tela de Agenda: calendário do mês com entregas e retiradas de chopeira por dia e a lista do dia separada por turno"
             />
           </BrowserFrame>
