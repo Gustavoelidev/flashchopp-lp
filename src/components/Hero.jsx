@@ -179,7 +179,7 @@ function HeroMockup() {
         transition={{ duration: 1.1, ease: EASE, delay: 0.35 }}
         className="absolute top-3 left-[27px] z-0 lg:top-[10px] lg:left-auto lg:right-0 xl:left-[196px] xl:right-auto"
       >
-        <PhoneVideo name="app-pedido" label="Gravação da loja FlashChopp: cliente escolhe barris de chopp e abre o carrinho" />
+        <PhoneVideo name="app-pedido" label="Gravação da loja FlashChopp: cliente escolhe barris de chopp e abre a comanda" />
       </motion.div>
       <Float delay={1.1} className="absolute top-[318px] left-0 z-10 lg:top-[352px] lg:left-2">
         <NovoPedido />

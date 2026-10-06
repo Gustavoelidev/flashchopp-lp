@@ -43,7 +43,7 @@ function Body({ children, dark = false }) {
 const DESTAQUES = [
   ['Catálogo', 'Barris, growlers e acessórios'],
   ['Promoções', 'Descontos por produto ou período'],
-  ['Carrinho e endereço', 'Cálculo de entrega por bairro'],
+  ['Comanda e endereço', 'Cálculo de entrega por bairro'],
   ['Agendamento', 'Data e janela de horário'],
   ['Pagamento', 'PIX automático ou na entrega'],
 ]
